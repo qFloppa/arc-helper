@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Arc Catchup</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="shell">
+      <section class="hero">
+        <div class="hero-copy">
+          <img class="logo" src="arc.png" alt="Arc">
+          <p class="eyebrow">Arc House reading and watchlist audit</p>
+          <h1>Find the Arc House content you have not touched yet.</h1>
+          <p class="lede">
+            Paste your copied My Contributions page and get a polished checklist of missed reads and videos from the current Arc catalog.
+          </p>
+        </div>
+        <div class="panel input-panel">
+          <div class="panel-head">
+            <div>
+              <p class="label">My Contributions Paste</p>
+              <h2>Drop the portal text here</h2>
+            </div>
+            <button class="ghost-button" id="clearButton" type="button">Clear</button>
+          </div>
+          <textarea id="contributionInput" spellcheck="false" placeholder="Scroll to the bottom of My Contributions, select all, copy, then paste here."></textarea>
+          <div class="actions">
+            <button id="analyzeButton" type="button">Find missed content</button>
+            <p id="statusText">Catalog loading...</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="summary" aria-live="polite">
+        <div class="stat">
+          <span id="catalogCount">0</span>
+          <p>Total catalog items</p>
+        </div>
+        <div class="stat">
+          <span id="completedCount">0</span>
+          <p>Matched contributions</p>
+        </div>
+        <div class="stat accent">
+          <span id="missedCount">0</span>
+          <p>Still waiting for you</p>
+        </div>
+      </section>
+
+      <section class="toolbar">
+        <div class="tabs" role="tablist" aria-label="Content type filter">
+          <button class="tab active" data-filter="all" type="button">All</button>
+          <button class="tab" data-filter="content" type="button">Reads</button>
+          <button class="tab" data-filter="video" type="button">Videos</button>
+        </div>
+        <label class="search">
+          <span>Search missed content</span>
+          <input id="searchInput" type="search" placeholder="Title keyword">
+        </label>
+      </section>
+
+      <section class="results">
+        <div class="results-head">
+          <div>
+            <p class="label">Missed List</p>
+            <h2 id="resultsTitle">Paste your contributions to begin</h2>
+          </div>
+          <p id="resultsMeta"></p>
+        </div>
+        <div id="emptyState" class="empty">
+          <h3>Your missed Arc queue will appear here.</h3>
+          <p>The app compares Read Content and Watch a Video entries against `arc-content.json`.</p>
+        </div>
+        <div id="contentGrid" class="grid"></div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
