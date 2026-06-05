@@ -281,7 +281,6 @@ input:focus {
   border-radius: 8px;
   color: inherit;
   background: rgba(255, 255, 255, 0.035);
-  text-decoration: none;
   transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
 }
 
@@ -293,8 +292,10 @@ input:focus {
 
 .cover-wrap {
   position: relative;
+  display: block;
   aspect-ratio: 16 / 9;
   background: var(--panel-soft);
+  text-decoration: none;
 }
 
 .cover-wrap img {
@@ -322,10 +323,43 @@ input:focus {
   padding: 16px;
 }
 
-.card h3 {
+.title-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: start;
   margin-bottom: 14px;
+}
+
+.title-link {
+  color: var(--text);
   font-size: 1rem;
+  font-weight: 800;
   line-height: 1.35;
+  text-decoration: none;
+}
+
+.title-link:hover {
+  color: var(--green);
+}
+
+.copy-button {
+  min-height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.045);
+  font-size: 0.74rem;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.copy-button:hover,
+.copy-button.copied {
+  border-color: rgba(117, 240, 184, 0.52);
+  color: #06100d;
+  background: var(--green);
 }
 
 .meta-row {

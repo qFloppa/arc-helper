@@ -1,4 +1,4 @@
-const state = {
+﻿const state = {
   catalog: [],
   completedKeys: new Set(),
   missed: [],
@@ -115,7 +115,7 @@ function extractCompletedTitles(rawText) {
 }
 
 function extractTitleFromDatedLine(line) {
-  const dateDivider = line.indexOf("·");
+  const dateDivider = line.indexOf("\u00b7");
   if (dateDivider >= 0) return line.slice(dateDivider + 1).trim();
 
   const dateMatch = line.match(/^[A-Z][a-z]{2}\s+\d{1,2}(?:st|nd|rd|th),\s+\d{4}\s*(?:[?*|-])?\s*(.*)$/);
@@ -205,27 +205,52 @@ function render() {
 }
 
 function createCard(item) {
-  const card = document.createElement("a");
+  const card = document.createElement("article");
   card.className = "card";
-  card.href = item.link;
-  card.target = "_blank";
-  card.rel = "noopener noreferrer";
 
+  const searchUrl = createArcSearchUrl(item.title);
   const duration = item.duration ? `<span>${escapeHtml(item.duration)}</span>` : "<span>Article</span>";
   card.innerHTML = `
-    <div class="cover-wrap">
+    <a class="cover-wrap" href="${escapeAttribute(searchUrl)}" target="_blank" rel="noopener noreferrer" aria-label="Open ${escapeAttribute(item.title)} in Arc House search">
       <img src="${escapeAttribute(item.cover)}" alt="">
       <span class="badge">${item.type === "video" ? "Video" : "Read"}</span>
-    </div>
+    </a>
     <div class="card-body">
-      <h3>${escapeHtml(item.title)}</h3>
+      <div class="title-row">
+        <a class="title-link" href="${escapeAttribute(searchUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.title)}</a>
+        <button class="copy-button" type="button" data-title="${escapeAttribute(item.title)}" aria-label="Copy title">Copy</button>
+      </div>
       <div class="meta-row">
         <span>${item.type === "video" ? "Watch" : "Read"}</span>
         ${duration}
       </div>
     </div>
   `;
+
+  const copyButton = card.querySelector(".copy-button");
+  copyButton.addEventListener("click", () => copyTitle(copyButton, item.title));
+
   return card;
+}
+
+function createArcSearchUrl(title) {
+  const params = new URLSearchParams({ query: title });
+  return `https://community.arc.io/home/search?${params.toString()}`;
+}
+
+async function copyTitle(button, title) {
+  try {
+    await navigator.clipboard.writeText(title);
+    button.textContent = "Copied";
+    button.classList.add("copied");
+    window.setTimeout(() => {
+      button.textContent = "Copy";
+      button.classList.remove("copied");
+    }, 1400);
+  } catch (error) {
+    button.textContent = "Select";
+    console.error(error);
+  }
 }
 
 function clearAll() {
