@@ -194,14 +194,33 @@ function render() {
 
   els.empty.classList.toggle("hidden", visible.length > 0);
   if (!visible.length && state.missed.length) {
-    els.empty.querySelector("h3").textContent = "No items match this filter.";
-    els.empty.querySelector("p").textContent = "Try another type or search term.";
+    setEmptyState("No items match this filter.", "Try another type or search term.");
   } else {
-    els.empty.querySelector("h3").textContent = "Your missed Arc queue will appear here.";
-    els.empty.querySelector("p").textContent = "The app compares Read Content and Watch a Video entries against `arc-content.json`.";
+    setEmptyState(
+      "Your missed Arc queue will appear here.",
+      "The app compares Read Content and Watch a Video entries against `arc-content.json`."
+    );
   }
 
   visible.forEach((item) => els.grid.appendChild(createCard(item)));
+}
+
+function setEmptyState(title, body) {
+  let heading = els.empty.querySelector("h3");
+  let paragraph = els.empty.querySelector("p");
+
+  if (!heading) {
+    heading = document.createElement("h3");
+    els.empty.prepend(heading);
+  }
+
+  if (!paragraph) {
+    paragraph = document.createElement("p");
+    els.empty.appendChild(paragraph);
+  }
+
+  heading.textContent = title;
+  paragraph.textContent = body;
 }
 
 function createCard(item) {
