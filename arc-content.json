@@ -1,5 +1,33 @@
 [
     {
+    "title": "Introducing Arc: The Economic OS for the internet",
+    "type": "content",
+    "duration": "",
+    "link": "https://community.arc.io/home/search?query=Introducing+Arc%3A+The+Economic+OS+for+the+internet&scope=Community",
+    "cover": "https://cdn.gradual.com/images/https://d2xo500swnpgl1.cloudfront.net/uploads/arc/Arc-intro-blog-b0dcbe4c-1e05-4840-9fa9-884b207fb33c-1760139097281.jpeg?width=600"
+  },
+    {
+    "title": "Deterministic Finality on Arc",
+    "type": "content",
+    "duration": "",
+    "link": "https://community.arc.io/home/search?query=Deterministic+Finality+on+Arc",
+    "cover": "https://cdn.gradual.com/images/https://d2xo500swnpgl1.cloudfront.net/uploads/arc/Blog-Arc-finality-1--acf8e13e-8b6b-4536-b695-5491ee3686b8-1760137569462.jpeg?width=600"
+  },
+    {
+    "title": "Arc’s Deterministic Finality",
+    "type": "content",
+    "duration": "",
+    "link": "https://community.arc.io/home/search?query=Arc%E2%80%99s+Deterministic+Finality",
+    "cover": "https://cdn.gradual.com/images/https://d2xo500swnpgl1.cloudfront.net/uploads/arc/bespoke-4714e9a6-d501-44ce-bbc2-23d11cf9416d-1761605560724.jpeg?width=600"
+  },
+    {
+    "title": "How Gas Works on Arc",
+    "type": "content",
+    "duration": "",
+    "link": "https://community.arc.io/home/search?query=How+Gas+Works+on+Arc",
+    "cover": "https://cdn.gradual.com/images/https://d2xo500swnpgl1.cloudfront.net/uploads/arc/Blog-Arc-gas-fe402ca2-c9a0-47fd-b7c2-54a4262b7440-1760137757236.jpeg?width=600"
+  },
+    {
     "title": "Built for the Money That Was Never Going to Move in Public",
     "type": "content",
     "duration": "",
