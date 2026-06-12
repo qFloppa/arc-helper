@@ -31,6 +31,9 @@ const stopLines = new Set([
   "Privacy",
   "Code of Conduct",
   "Your Privacy Choices",
+  "Finish Onboarding",
+  "Event Registration",
+  "Event Participation",
 ]);
 
 init();
