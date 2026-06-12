@@ -65,15 +65,44 @@ function analyze() {
   const completedTitles = extractCompletedTitles(els.input.value);
   const completedPool = completedTitles.map(normalizeTitle);
 
+  // Two-Pass Matching
+  const matchedIndices = new Set();
   state.completedKeys = [];
-  state.missed = state.catalog.filter((item) => {
-    const catalogKey = normalizeTitle(item.title);
-    const matched = findAndConsumeMatch(catalogKey, completedPool);
-    if (matched) {
+
+  // Pass 1: Try exact matches first
+  for (let i = 0; i < state.catalog.length; i += 1) {
+    const catalogKey = normalizeTitle(state.catalog[i].title);
+    const exactIndex = completedPool.indexOf(catalogKey);
+    if (exactIndex >= 0) {
+      completedPool.splice(exactIndex, 1);
+      matchedIndices.add(i);
       state.completedKeys.push(catalogKey);
     }
-    return !matched;
-  });
+  }
+
+  // Pass 2: Try fuzzy / substring matches for unmatched items
+  state.missed = [];
+  for (let i = 0; i < state.catalog.length; i += 1) {
+    if (matchedIndices.has(i)) continue;
+
+    const catalogKey = normalizeTitle(state.catalog[i].title);
+    let fuzzyMatched = false;
+    for (let idx = 0; idx < completedPool.length; idx += 1) {
+      const completedKey = completedPool[idx];
+      if (!completedKey || !catalogKey) continue;
+      if (catalogKey.includes(completedKey) || completedKey.includes(catalogKey) || similarity(catalogKey, completedKey) >= 0.9) {
+        completedPool.splice(idx, 1);
+        matchedIndices.add(i);
+        state.completedKeys.push(catalogKey);
+        fuzzyMatched = true;
+        break;
+      }
+    }
+
+    if (!fuzzyMatched) {
+      state.missed.push(state.catalog[i]);
+    }
+  }
 
   els.completedCount.textContent = state.completedKeys.length;
   els.missedCount.textContent = state.missed.length;
@@ -122,27 +151,6 @@ function extractTitleFromDatedLine(line) {
 
   const dateMatch = line.match(/^[A-Z][a-z]{2}\s+\d{1,2}(?:st|nd|rd|th),\s+\d{4}\s*(?:[?*|-])?\s*(.*)$/);
   return dateMatch ? dateMatch[1].trim() : null;
-}
-
-function findAndConsumeMatch(catalogKey, completedPool) {
-  // 1. Try to find exact match
-  const exactIndex = completedPool.indexOf(catalogKey);
-  if (exactIndex >= 0) {
-    completedPool.splice(exactIndex, 1);
-    return true;
-  }
-
-  // 2. Try to find fuzzy/substring match
-  for (let idx = 0; idx < completedPool.length; idx += 1) {
-    const completedKey = completedPool[idx];
-    if (!completedKey || !catalogKey) continue;
-    if (catalogKey.includes(completedKey) || completedKey.includes(catalogKey) || similarity(catalogKey, completedKey) >= 0.9) {
-      completedPool.splice(idx, 1);
-      return true;
-    }
-  }
-
-  return false;
 }
 
 function normalizeTitle(value) {
