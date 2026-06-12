@@ -1,6 +1,6 @@
 const state = {
   catalog: [],
-  completedKeys: new Set(),
+  completedKeys: [],
   missed: [],
   filter: "all",
   query: "",
@@ -33,12 +33,6 @@ const stopLines = new Set([
   "Your Privacy Choices",
 ]);
 
-const duplicateExceptions = new Set([
-  "emerging ai trends with usdc",
-  "using circle developer controlled wallets to send manage usdc",
-  "using circle wallets to send manage usdc",
-]);
-
 init();
 
 async function init() {
@@ -69,23 +63,19 @@ async function init() {
 
 function analyze() {
   const completedTitles = extractCompletedTitles(els.input.value);
-  const completedKeys = new Set(completedTitles.map(normalizeTitle));
+  const completedPool = completedTitles.map(normalizeTitle);
 
-  state.completedKeys = new Set();
+  state.completedKeys = [];
   state.missed = state.catalog.filter((item) => {
     const catalogKey = normalizeTitle(item.title);
-    const matched = hasMatch(catalogKey, completedKeys);
-    if (matched) state.completedKeys.add(catalogKey);
-    
-    // Exception to always show these duplicate items and their duplicates in the results
-    if (duplicateExceptions.has(catalogKey)) {
-      return true;
+    const matched = findAndConsumeMatch(catalogKey, completedPool);
+    if (matched) {
+      state.completedKeys.push(catalogKey);
     }
-    
     return !matched;
   });
 
-  els.completedCount.textContent = state.completedKeys.size;
+  els.completedCount.textContent = state.completedKeys.length;
   els.missedCount.textContent = state.missed.length;
   els.status.textContent = completedTitles.length
     ? `Found ${completedTitles.length} contribution title${completedTitles.length === 1 ? "" : "s"} in the pasted text.`
@@ -123,7 +113,7 @@ function extractCompletedTitles(rawText) {
     if (title) titles.push(title);
   }
 
-  return [...new Set(titles)];
+  return titles;
 }
 
 function extractTitleFromDatedLine(line) {
@@ -134,13 +124,22 @@ function extractTitleFromDatedLine(line) {
   return dateMatch ? dateMatch[1].trim() : null;
 }
 
-function hasMatch(catalogKey, completedKeys) {
-  if (completedKeys.has(catalogKey)) return true;
+function findAndConsumeMatch(catalogKey, completedPool) {
+  // 1. Try to find exact match
+  const exactIndex = completedPool.indexOf(catalogKey);
+  if (exactIndex >= 0) {
+    completedPool.splice(exactIndex, 1);
+    return true;
+  }
 
-  for (const completedKey of completedKeys) {
+  // 2. Try to find fuzzy/substring match
+  for (let idx = 0; idx < completedPool.length; idx += 1) {
+    const completedKey = completedPool[idx];
     if (!completedKey || !catalogKey) continue;
-    if (catalogKey.includes(completedKey) || completedKey.includes(catalogKey)) return true;
-    if (similarity(catalogKey, completedKey) >= 0.9) return true;
+    if (catalogKey.includes(completedKey) || completedKey.includes(catalogKey) || similarity(catalogKey, completedKey) >= 0.9) {
+      completedPool.splice(idx, 1);
+      return true;
+    }
   }
 
   return false;
@@ -286,7 +285,7 @@ async function copyTitle(button, title) {
 
 function clearAll() {
   els.input.value = "";
-  state.completedKeys = new Set();
+  state.completedKeys = [];
   state.missed = [];
   state.query = "";
   els.search.value = "";
