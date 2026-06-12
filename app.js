@@ -1,4 +1,4 @@
-﻿const state = {
+const state = {
   catalog: [],
   completedKeys: new Set(),
   missed: [],
@@ -31,6 +31,12 @@ const stopLines = new Set([
   "Privacy",
   "Code of Conduct",
   "Your Privacy Choices",
+]);
+
+const duplicateExceptions = new Set([
+  "emerging ai trends with usdc",
+  "using circle developer controlled wallets to send manage usdc",
+  "using circle wallets to send manage usdc",
 ]);
 
 init();
@@ -70,6 +76,12 @@ function analyze() {
     const catalogKey = normalizeTitle(item.title);
     const matched = hasMatch(catalogKey, completedKeys);
     if (matched) state.completedKeys.add(catalogKey);
+    
+    // Exception to always show these duplicate items and their duplicates in the results
+    if (duplicateExceptions.has(catalogKey)) {
+      return true;
+    }
+    
     return !matched;
   });
 
