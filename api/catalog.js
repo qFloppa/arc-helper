@@ -1,5 +1,12 @@
 module.exports = [
   {
+    "title": "Project submission form for office hours",
+    "type": "content",
+    "duration": "",
+    "link": "https://community.arc.io/home/resources/project-submission-form-for-office-hours",
+    "cover": "https://cdn.gradual.com/images/https://d2xo500swnpgl1.cloudfront.net/uploads/arc/office-hours-1709736f-b826-4894-a555-9629f18e7d41-1778508993154.jpeg?fit=scale-down&width=600"
+  },
+  {
     "title": "Transaction memos and batch transactions activate on Arc Testnet",
     "type": "content",
     "duration": "",
