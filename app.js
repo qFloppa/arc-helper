@@ -144,16 +144,16 @@ function createCard(item) {
   const card = document.createElement("article");
   card.className = "card";
 
-  const searchUrl = createArcSearchUrl(item.title);
+  const targetLink = item.link || createArcSearchUrl(item.title);
   const duration = item.duration ? `<span>${escapeHtml(item.duration)}</span>` : "<span>Article</span>";
   card.innerHTML = `
-    <a class="cover-wrap" href="${escapeAttribute(searchUrl)}" target="_blank" rel="noopener noreferrer" aria-label="Open ${escapeAttribute(item.title)} in Arc House search">
+    <a class="cover-wrap" href="${escapeAttribute(targetLink)}" target="_blank" rel="noopener noreferrer" aria-label="Open ${escapeAttribute(item.title)}">
       <img src="${escapeAttribute(item.cover)}" alt="">
       <span class="badge">${item.type === "video" ? "Video" : "Read"}</span>
     </a>
     <div class="card-body">
       <div class="title-row">
-        <a class="title-link" href="${escapeAttribute(searchUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.title)}</a>
+        <a class="title-link" href="${escapeAttribute(targetLink)}" target="_blank" rel="noopener noreferrer">${escapeHtml(item.title)}</a>
         <button class="copy-button" type="button" data-title="${escapeAttribute(item.title)}" aria-label="Copy title">Copy</button>
       </div>
       <div class="meta-row">
