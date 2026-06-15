@@ -1,5 +1,4 @@
 const state = {
-  catalog: [],
   completedKeys: [],
   missed: [],
   filter: "all",
@@ -22,30 +21,24 @@ const els = {
   tabs: [...document.querySelectorAll(".tab")],
 };
 
-const contributionTypes = new Set(["Read Content", "Watch a Video"]);
-const stopLines = new Set([
-  "Read Content",
-  "Watch a Video",
-  "Daily Active",
-  "Terms of Service",
-  "Privacy",
-  "Code of Conduct",
-  "Your Privacy Choices",
-  "Finish Onboarding",
-  "Event Registration",
-  "Event Participation",
-]);
-
 init();
 
 async function init() {
   try {
-    const response = await fetch("arc-content.json");
-    state.catalog = await response.json();
-    els.catalogCount.textContent = state.catalog.length;
-    els.status.textContent = "Ready to compare against the Arc content catalog.";
+    const response = await fetch("/api/analyze", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({}),
+    });
+    const data = await response.json();
+    if (response.ok) {
+      els.catalogCount.textContent = data.catalogCount;
+      els.status.textContent = "Ready to compare against the Arc content catalog.";
+    } else {
+      throw new Error(data.error || "Failed to load catalog count.");
+    }
   } catch (error) {
-    els.status.textContent = "Could not load arc-content.json. Open this through a local server if the browser blocks file access.";
+    els.status.textContent = "Could not load catalog. Make sure the API server is running.";
     console.error(error);
   }
 
@@ -64,139 +57,41 @@ async function init() {
   });
 }
 
-function analyze() {
-  const completedTitles = extractCompletedTitles(els.input.value);
-  const completedPool = completedTitles.map(normalizeTitle);
-
-  // Two-Pass Matching
-  const matchedIndices = new Set();
-  state.completedKeys = [];
-
-  // Pass 1: Try exact matches first
-  for (let i = 0; i < state.catalog.length; i += 1) {
-    const catalogKey = normalizeTitle(state.catalog[i].title);
-    const exactIndex = completedPool.indexOf(catalogKey);
-    if (exactIndex >= 0) {
-      completedPool.splice(exactIndex, 1);
-      matchedIndices.add(i);
-      state.completedKeys.push(catalogKey);
-    }
+async function analyze() {
+  const val = els.input.value.trim();
+  if (!val) {
+    els.status.textContent = "No Read Content or Watch a Video contribution titles were found.";
+    return;
   }
 
-  // Pass 2: Try fuzzy / substring matches for unmatched items
-  state.missed = [];
-  for (let i = 0; i < state.catalog.length; i += 1) {
-    if (matchedIndices.has(i)) continue;
+  els.status.textContent = "Analyzing contributions...";
+  els.analyze.disabled = true;
 
-    const catalogKey = normalizeTitle(state.catalog[i].title);
-    let fuzzyMatched = false;
-    for (let idx = 0; idx < completedPool.length; idx += 1) {
-      const completedKey = completedPool[idx];
-      if (!completedKey || !catalogKey) continue;
-      if (catalogKey.includes(completedKey) || completedKey.includes(catalogKey) || similarity(catalogKey, completedKey) >= 0.9) {
-        completedPool.splice(idx, 1);
-        matchedIndices.add(i);
-        state.completedKeys.push(catalogKey);
-        fuzzyMatched = true;
-        break;
-      }
+  try {
+    const response = await fetch("/api/analyze", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ input: val }),
+    });
+    const data = await response.json();
+    if (response.ok) {
+      state.completedKeys = Array.from({ length: data.completedCount });
+      state.missed = data.missed;
+      els.completedCount.textContent = data.completedCount;
+      els.missedCount.textContent = data.missedCount;
+      els.status.textContent = data.completedTitlesCount
+        ? `Found ${data.completedTitlesCount} contribution title${data.completedTitlesCount === 1 ? "" : "s"} in the pasted text.`
+        : "No Read Content or Watch a Video contribution titles were found.";
+      render();
+    } else {
+      throw new Error(data.error || "Failed to analyze.");
     }
-
-    if (!fuzzyMatched) {
-      state.missed.push(state.catalog[i]);
-    }
+  } catch (error) {
+    els.status.textContent = "Failed to analyze. Please try again.";
+    console.error(error);
+  } finally {
+    els.analyze.disabled = false;
   }
-
-  els.completedCount.textContent = state.completedKeys.length;
-  els.missedCount.textContent = state.missed.length;
-  els.status.textContent = completedTitles.length
-    ? `Found ${completedTitles.length} contribution title${completedTitles.length === 1 ? "" : "s"} in the pasted text.`
-    : "No Read Content or Watch a Video contribution titles were found.";
-
-  render();
-}
-
-function extractCompletedTitles(rawText) {
-  const lines = rawText
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter(Boolean);
-  const titles = [];
-
-  for (let index = 0; index < lines.length; index += 1) {
-    if (!contributionTypes.has(lines[index])) continue;
-
-    const titleParts = [];
-    for (let lookahead = index + 1; lookahead < lines.length; lookahead += 1) {
-      const line = lines[lookahead];
-      if (lookahead !== index + 1 && stopLines.has(line)) break;
-      if (line === "+" || /^\+?\d+$/.test(line) || /^x\d+$/i.test(line)) continue;
-
-      const datedTitle = extractTitleFromDatedLine(line);
-      if (datedTitle !== null) {
-        if (datedTitle) titleParts.push(datedTitle);
-        continue;
-      }
-
-      if (titleParts.length) titleParts.push(line);
-    }
-
-    const title = titleParts.join(" ").replace(/\s+/g, " ").trim();
-    if (title) titles.push(title);
-  }
-
-  return titles;
-}
-
-function extractTitleFromDatedLine(line) {
-  const dateDivider = line.indexOf("\u00b7");
-  if (dateDivider >= 0) return line.slice(dateDivider + 1).trim();
-
-  const dateMatch = line.match(/^[A-Z][a-z]{2}\s+\d{1,2}(?:st|nd|rd|th),\s+\d{4}\s*(?:[?*|-])?\s*(.*)$/);
-  return dateMatch ? dateMatch[1].trim() : null;
-}
-
-function normalizeTitle(value) {
-  return fixCommonMojibake(String(value || ""))
-    .normalize("NFKD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, " ")
-    .replace(/\b(or|and|the|a|an)\b/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function fixCommonMojibake(value) {
-  return value
-    .replaceAll("\u00e2\u20ac\u2122", "'")
-    .replaceAll("\u00e2\u20ac\u0153", '"')
-    .replaceAll("\u00e2\u20ac\ufffd", '"')
-    .replaceAll("\u00e2\u20ac\u201c", "-")
-    .replaceAll("\u00e2\u20ac\u201d", "-");
-}
-
-function similarity(a, b) {
-  const longer = a.length > b.length ? a : b;
-  const shorter = a.length > b.length ? b : a;
-  if (!longer.length) return 1;
-  return (longer.length - editDistance(longer, shorter)) / longer.length;
-}
-
-function editDistance(a, b) {
-  const costs = Array.from({ length: b.length + 1 }, (_, index) => index);
-  for (let i = 1; i <= a.length; i += 1) {
-    let previous = i;
-    for (let j = 1; j <= b.length; j += 1) {
-      const current = costs[j];
-      costs[j] = a[i - 1] === b[j - 1]
-        ? costs[j - 1]
-        : Math.min(costs[j - 1], previous, costs[j]) + 1;
-      previous = current;
-    }
-    costs[0] = i;
-  }
-  return costs[b.length];
 }
 
 function render() {
@@ -220,7 +115,7 @@ function render() {
   } else {
     setEmptyState(
       "Your missed Arc queue will appear here.",
-      "The app compares Read Content and Watch a Video entries against `arc-content.json`."
+      "The app compares Read Content and Watch a Video entries against the Arc content catalog."
     );
   }
 
