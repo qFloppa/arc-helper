@@ -1,5 +1,12 @@
 module.exports = [
   {
+    "title": "Arc x Uniswap🦄 Swap and liquidity infrastructure for Arc",
+    "type": "content",
+    "duration": "",
+    "link": "https://community.arc.io/home/search?query=Arc+x+Uniswap%F0%9F%A6%84+Swap+and+liquidity+infrastructure+for+Arc",
+    "cover": "https://cdn.gradual.com/images/https://d2xo500swnpgl1.cloudfront.net/uploads/arc/Social-Arc-PartnerSpotlight-Uniswap-1600x900-3793fcd6-5885-4c0a-88b2-96ea7b496754-1781559502088.jpeg?fit=scale-down&width=600"
+  },
+  {
     "title": "Project submission form for office hours",
     "type": "content",
     "duration": "",
