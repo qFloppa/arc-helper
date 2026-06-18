@@ -1,5 +1,26 @@
 module.exports = [
   {
+    "title": "Unified Balance Kit: Partial Liquidity, Routing, and Fallback Patterns",
+    "type": "content",
+    "duration": "",
+    "link": "https://community.arc.io/home/search?query=Unified+Balance+Kit%3A+Partial+Liquidity%2C+Routing%2C+and+Fallback+Patterns",
+    "cover": "https://cdn.gradual.com/images/https://d2xo500swnpgl1.cloudfront.net/uploads/arc/Blog-Arc-Building-with-Unified-Balance-1600x900-C--bee928c0-a1ad-462e-a23b-4e96a7573cac-1781751624548.jpeg?width=600"
+  },
+  {
+    "title": "Unified Balance Kit: Designing for Pending and Funds-in-Motion States",
+    "type": "content",
+    "duration": "",
+    "link": "https://community.arc.io/home/search?query=Unified+Balance+Kit%3A+Designing+for+Pending+and+Funds-in-Motion+States",
+    "cover": "https://cdn.gradual.com/images/https://d2xo500swnpgl1.cloudfront.net/uploads/arc/Blog-Arc-Building-with-Unified-Balance-1600x900-B--2b54245a-bac9-4094-8ec1-f0572a667678-1781751516222.jpeg?width=600"
+  },
+  {
+    "title": "Unified Balance Kit: Rethinking Payment and Treasury App Architectures",
+    "type": "content",
+    "duration": "",
+    "link": "https://community.arc.io/home/search?query=Unified+Balance+Kit%3A+Rethinking+Payment+and+Treasury+App+Architectures",
+    "cover": "https://cdn.gradual.com/images/https://d2xo500swnpgl1.cloudfront.net/uploads/arc/Blog-Arc-Building-with-Unified-Balance-1600x900-A--7d49c76e-b08f-4ff8-9247-16d1b6fdf5a0-1781751285689.jpeg?width=600"
+  },
+  {
     "title": "Arc x Uniswap🦄 Swap and liquidity infrastructure for Arc",
     "type": "content",
     "duration": "",
