@@ -1,5 +1,19 @@
 module.exports = [
   {
+    "title": "Unified Balance Kit: Production Safeguards and Recovery Patterns for spend()",
+    "type": "content",
+    "duration": "",
+    "link": "https://community.arc.io/home/search?query=Unified+Balance+Kit%3A+Production+Safeguards+and+Recovery+Patterns+for+spend%28%29",
+    "cover": "https://cdn.gradual.com/images/https://d2xo500swnpgl1.cloudfront.net/uploads/arc/Blog-Arc-Building-with-Unified-Balance-1600x900-D--aa9860bf-f64a-49aa-92f3-0886c5ac5e0b-1781829852612.jpeg?width=600"
+  },
+    {
+    "title": "Arc Transaction Memos: Structured transaction context for financial workflows on Arc",
+    "type": "content",
+    "duration": "",
+    "link": "https://community.arc.io/home/search?query=Arc+Transaction+Memos%3A+Structured+transaction+context+for+financial+workflows+on+Arc",
+    "cover": "https://cdn.gradual.com/images/https://d2xo500swnpgl1.cloudfront.net/uploads/arc/Blog-Arc-structured-context-for-onchain-transactions-1600x900-cd277986-1cef-47e5-9fcd-a207f4c44fbf-1781794658934.jpeg?width=600"
+  },
+  {
     "title": "Unified Balance Kit: Partial Liquidity, Routing, and Fallback Patterns",
     "type": "content",
     "duration": "",
