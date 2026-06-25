@@ -1,5 +1,12 @@
 module.exports = [
   {
+    "title": "Move USDC to and from Stellar with CCTP",
+    "type": "video",
+    "duration": "1:47",
+    "link": "https://community.arc.io/home/search?query=Move+USDC+to+and+from+Stellar+with+CCTP",
+    "cover": "https://cdn.gradual.com/images/https://d2xo500swnpgl1.cloudfront.net/uploads/arc/RN02-CCTP-on-Stellar-thumbnail-1--e1d441b3-3c87-4d43-87a7-79f5cd8ec0ae-1782231619172.jpeg?width=600"
+  },
+  {
     "title": "Unified Balance Kit: Production Safeguards and Recovery Patterns for spend()",
     "type": "content",
     "duration": "",
