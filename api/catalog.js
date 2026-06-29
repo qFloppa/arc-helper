@@ -1,5 +1,19 @@
 module.exports = [
   {
+    "title": "What Vyper's Arc Testnet work opens up for builders of agentic financial workflows",
+    "type": "content",
+    "duration": "",
+    "link": "https://community.arc.io/home/search?query=What+Vyper%27s+Arc+Testnet+work+opens+up+for+builders+of+agentic+financial+workflows",
+    "cover": "https://cdn.gradual.com/images/https://d2xo500swnpgl1.cloudfront.net/uploads/arc/Social-Arc-Vyper-on-Arc-1600x900-cb1a93f2-d2f1-4018-8423-8495beb9c6e6-1782493679174.jpeg?width=600"
+  },
+   {
+    "title": "Event Replay: Privacy on Arc: What Builders Should Know",
+    "type": "video",
+    "duration": "29:19",
+    "link": "https://community.arc.io/home/search?query=Event+Replay%3A+Privacy+on+Arc%3A+What+Builders+Should+Know",
+    "cover": "https://cdn.gradual.com/images/https://d2xo500swnpgl1.cloudfront.net/uploads/arc/Arc-Privacy-Whitepaper-Livestream-2--86446cc7-9de0-4b8c-a978-a03aac8064e7-1782490151145.jpeg?width=600"
+  },
+  {
     "title": "Move USDC to and from Stellar with CCTP",
     "type": "video",
     "duration": "1:47",
